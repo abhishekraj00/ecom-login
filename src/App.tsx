@@ -1,8 +1,12 @@
+import Login from "./auth/login";
 
 const App = () => {
   return (
-    <div>App</div>
-  )
-}
+    <div>
+      App
+      <Login />
+    </div>
+  );
+};
 
-export default App
+export default App;
