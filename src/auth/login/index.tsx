@@ -1,41 +1,94 @@
 import { useState } from "react";
+import "./login.css";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import axios from "axios";
+import Loader from "../../components/Loader";
 
 const Login = () => {
-  const [userId, setUserId] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [userPassword, setUserPassword] = useState<string>("");
-  const [showPassword, setshowPassword] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // getting response from the server
+
+  const loginUserResponse = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.post(
+        "https://dummyjson.com/auth/login",
+        {
+          username: username,
+          password: userPassword,
+        },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <Loader loading={loading} />;
+  }
+
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        flexDirection: "column",
-        marginLeft: "50px",
+    <Box
+      className="login-main-container"
+      component="form"
+      sx={{
+        "& > :not(style)": { m: 1, width: "25ch" },
       }}
+      noValidate
+      autoComplete="off"
     >
-      <input
-        placeholder="Enter User-Id"
-        value={userId}
-        onChange={(e) => setUserId(e.target.value)}
-        style={{ padding: "10px", borderRadius: "5px", borderWidth: "0.1px" }}
+      <TextField
+        id="outlined-basic"
+        label="Username"
+        variant="outlined"
+        onChange={(e) => setUsername(e.target.value)}
+        value={username}
       />
-      <br />
-      <br />
-      <div style={{ borderRadius: "5px", border: "1px solid" }}>
-        <input
-          placeholder="Enter Password"
-          value={userPassword}
-          type={showPassword ? "password" : "text"}
+      <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+        <OutlinedInput
+          id="outlined-adornment-password"
+          type={showPassword ? "text" : "password"}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowPassword((show) => !show)}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
           onChange={(e) => setUserPassword(e.target.value)}
-          style={{ padding: "10px", border: "none" }}
+          label="Password"
+          value={userPassword}
         />
-        <span onClick={() => setshowPassword((prev) => !prev)}>
-          {showPassword ? "Show" : "Hide"}
-        </span>
-      </div>
-      <br />
-    </div>
+      </FormControl>
+      <Stack spacing={2} direction="row">
+        <Button variant="contained" onClick={loginUserResponse} color="primary">
+          Login
+        </Button>
+      </Stack>
+    </Box>
   );
 };
 
