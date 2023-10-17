@@ -13,6 +13,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import axios from "axios";
 import Loader from "../../components/Loader";
+import Link from "@mui/material/Link";
 
 const Login = () => {
   const [username, setUsername] = useState<string>("");
@@ -88,6 +89,18 @@ const Login = () => {
           Login
         </Button>
       </Stack>
+      <div>
+        Not a member ?{" "}
+        <Link
+          component="button"
+          variant="body2"
+          onClick={() => {
+            console.info("I'm a button.");
+          }}
+        >
+          Sign Up
+        </Link>
+      </div>
     </Box>
   );
 };
